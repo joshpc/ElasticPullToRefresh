@@ -11,9 +11,9 @@
 		F7C0555E1C27946200D7442D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C0555D1C27946200D7442D /* ViewController.swift */; };
 		F7C055631C27946200D7442D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7C055621C27946200D7442D /* Assets.xcassets */; };
 		F7C055661C27946200D7442D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F7C055641C27946200D7442D /* LaunchScreen.storyboard */; };
-		F7C055711C27948F00D7442D /* BounceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C0556E1C27948F00D7442D /* BounceView.swift */; };
-		F7C055721C27948F00D7442D /* ElasticPullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C0556F1C27948F00D7442D /* ElasticPullToRefresh.swift */; };
-		F7C055731C27948F00D7442D /* IndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C055701C27948F00D7442D /* IndicatorView.swift */; };
+		F7C0557F1C27A2DD00D7442D /* BounceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C0557C1C27A2DD00D7442D /* BounceView.swift */; };
+		F7C055801C27A2DD00D7442D /* ElasticPullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C0557D1C27A2DD00D7442D /* ElasticPullToRefresh.swift */; };
+		F7C055811C27A2DD00D7442D /* IndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C0557E1C27A2DD00D7442D /* IndicatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,9 +23,9 @@
 		F7C055621C27946200D7442D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F7C055651C27946200D7442D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F7C055671C27946200D7442D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F7C0556E1C27948F00D7442D /* BounceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BounceView.swift; sourceTree = "<group>"; };
-		F7C0556F1C27948F00D7442D /* ElasticPullToRefresh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElasticPullToRefresh.swift; sourceTree = "<group>"; };
-		F7C055701C27948F00D7442D /* IndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndicatorView.swift; sourceTree = "<group>"; };
+		F7C0557C1C27A2DD00D7442D /* BounceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BounceView.swift; sourceTree = "<group>"; };
+		F7C0557D1C27A2DD00D7442D /* ElasticPullToRefresh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElasticPullToRefresh.swift; sourceTree = "<group>"; };
+		F7C0557E1C27A2DD00D7442D /* IndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndicatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,7 +58,7 @@
 		F7C0555A1C27946200D7442D /* ElasticPullToRefreshDemo */ = {
 			isa = PBXGroup;
 			children = (
-				F7C0556D1C27948F00D7442D /* ElasticPullToRefresh */,
+				F7C0557B1C27A2DD00D7442D /* ElasticPullToRefresh */,
 				F7C0555B1C27946200D7442D /* AppDelegate.swift */,
 				F7C0555D1C27946200D7442D /* ViewController.swift */,
 				F7C055621C27946200D7442D /* Assets.xcassets */,
@@ -68,14 +68,15 @@
 			path = ElasticPullToRefreshDemo;
 			sourceTree = "<group>";
 		};
-		F7C0556D1C27948F00D7442D /* ElasticPullToRefresh */ = {
+		F7C0557B1C27A2DD00D7442D /* ElasticPullToRefresh */ = {
 			isa = PBXGroup;
 			children = (
-				F7C0556E1C27948F00D7442D /* BounceView.swift */,
-				F7C0556F1C27948F00D7442D /* ElasticPullToRefresh.swift */,
-				F7C055701C27948F00D7442D /* IndicatorView.swift */,
+				F7C0557C1C27A2DD00D7442D /* BounceView.swift */,
+				F7C0557D1C27A2DD00D7442D /* ElasticPullToRefresh.swift */,
+				F7C0557E1C27A2DD00D7442D /* IndicatorView.swift */,
 			);
-			path = ElasticPullToRefresh;
+			name = ElasticPullToRefresh;
+			path = ../../ElasticPullToRefresh;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,11 +149,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7C055711C27948F00D7442D /* BounceView.swift in Sources */,
-				F7C055721C27948F00D7442D /* ElasticPullToRefresh.swift in Sources */,
+				F7C0557F1C27A2DD00D7442D /* BounceView.swift in Sources */,
+				F7C055801C27A2DD00D7442D /* ElasticPullToRefresh.swift in Sources */,
 				F7C0555E1C27946200D7442D /* ViewController.swift in Sources */,
 				F7C0555C1C27946200D7442D /* AppDelegate.swift in Sources */,
-				F7C055731C27948F00D7442D /* IndicatorView.swift in Sources */,
+				F7C055811C27A2DD00D7442D /* IndicatorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
