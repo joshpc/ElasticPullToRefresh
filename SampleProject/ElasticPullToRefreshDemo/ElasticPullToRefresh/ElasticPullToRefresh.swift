@@ -12,7 +12,7 @@ public class RefreshWrapper: UIView, UIGestureRecognizerDelegate {
 	public let scrollView: UIScrollView
 	public var didPullToRefresh: (()->())?
 	
-	public var pullDistance: CGFloat = 88
+	public var pullDistance: CGFloat = 66
 	public var bendDistance: CGFloat = 22
 	public var animationDuration: Double = 0.5
 	public var indicatorSize: CGSize {
@@ -39,7 +39,7 @@ public class RefreshWrapper: UIView, UIGestureRecognizerDelegate {
 	}
 	private var touchX: CGFloat = 0.0
 	private var refreshing = false
-	
+	private var originalInsets = UIEdgeInsetsMake(0, 0, 0, 0)
 	private var context = "ElasticPullToRefreshContext"
 	
 	convenience public init(scrollView: UIScrollView) {
@@ -57,6 +57,7 @@ public class RefreshWrapper: UIView, UIGestureRecognizerDelegate {
 		addSubview(bounceView)
 		
 		scrollView.addObserver(self, forKeyPath: "contentOffset", options: .Initial, context: &context)
+		scrollView.addObserver(self, forKeyPath: "contentInset", options: .Initial, context: &context)
 		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: "didPan:")
 		panGestureRecognizer.delegate = self
@@ -79,13 +80,15 @@ public class RefreshWrapper: UIView, UIGestureRecognizerDelegate {
 	
 	private func startRefreshing() {
 		refreshing = true
-		scrollView.contentInset = UIEdgeInsetsMake(pullDistance, 0, 0, 0)
+		updateContentInsets(UIEdgeInsetsMake(originalInsets.top + pullDistance, 0, 0, 0))
 		bounceView.indicator.setAnimating(true)
 	}
 	
 	func didFinishRefreshing() {
 		refreshing = false
-		scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
+		UIView.animateWithDuration(animationDuration) { () -> Void in
+			self.updateContentInsets(self.originalInsets)
+		}
 		bounceView.indicator.setAnimating(false)
 	}
 	
@@ -98,9 +101,12 @@ public class RefreshWrapper: UIView, UIGestureRecognizerDelegate {
 	// MARK: Observing
 	
 	public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<()>) {
-		if (context == &self.context && keyPath == "contentOffset") {
-			if refreshing == false {
+		if (context == &self.context) {
+			if refreshing == false && keyPath == "contentOffset" {
 				handleScroll()
+			}
+			else if keyPath == "contentInset" {
+				handleContentInsetUpdate()
 			}
 		}
 		else {
@@ -110,10 +116,20 @@ public class RefreshWrapper: UIView, UIGestureRecognizerDelegate {
 	
 	// MARK: Helpers
 	
+	private func handleContentInsetUpdate() {
+		originalInsets = scrollView.contentInset
+	}
+	
+	private func updateContentInsets(insets: UIEdgeInsets) {
+		scrollView.removeObserver(self, forKeyPath: "contentInset")
+		scrollView.contentInset = insets
+		scrollView.addObserver(self, forKeyPath: "contentInset", options: .New, context: &context)
+	}
+	
 	private func handleScroll() {
-		let y = scrollView.contentOffset.y * -1
+		let y = scrollView.contentOffset.y * -1 - scrollView.contentInset.top
 		let bounds = self.bounds
-		bounceView.frame = CGRectMake(bounds.minX, bounds.origin.y + min(y - pullDistance, 0), bounds.size.width, pullDistance)
+		bounceView.frame = CGRectMake(bounds.minX, bounds.origin.y + scrollView.contentInset.top + min(y - pullDistance, 0), bounds.size.width, pullDistance)
 		
 		if y > 0 {
 			if y < pullDistance {
