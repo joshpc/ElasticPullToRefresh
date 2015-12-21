@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class RefreshWrapper: UIView, UIGestureRecognizerDelegate {
+public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	public let scrollView: UIScrollView
 	public var didPullToRefresh: (()->())?
 	

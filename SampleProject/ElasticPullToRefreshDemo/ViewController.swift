@@ -11,7 +11,7 @@ import UIKit
 class ViewController: UIViewController {
 	override func loadView() {
 		let tableView = UITableView()
-		let wrapper = RefreshWrapper(scrollView: tableView)
+		let wrapper = ElasticPullToRefresh(scrollView: tableView)
 		wrapper.didPullToRefresh = {
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * NSEC_PER_SEC)), dispatch_get_main_queue()) { () -> Void in
 				wrapper.didFinishRefreshing()
