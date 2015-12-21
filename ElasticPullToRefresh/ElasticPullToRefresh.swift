@@ -85,11 +85,15 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	}
 	
 	public func didFinishRefreshing() {
+		scrollView.scrollEnabled = false
+		
 		refreshing = false
 		UIView.animateWithDuration(animationDuration) { () -> Void in
 			self.updateContentInsets(self.originalInsets)
 		}
 		bounceView.indicator.setAnimating(false)
+		
+		scrollView.scrollEnabled = true
 	}
 	
 	// MARK: Gesture Recognizers
