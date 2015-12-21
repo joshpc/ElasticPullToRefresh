@@ -74,6 +74,8 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	override public func layoutSubviews() {
 		super.layoutSubviews()
 		scrollView.frame = bounds
+		handleScroll()
+		bounceView.bend(x: touchX, y: 0)
 	}
 	
 	// MARK: Refreshing
