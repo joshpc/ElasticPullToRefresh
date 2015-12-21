@@ -84,7 +84,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 		bounceView.indicator.setAnimating(true)
 	}
 	
-	func didFinishRefreshing() {
+	public func didFinishRefreshing() {
 		refreshing = false
 		UIView.animateWithDuration(animationDuration) { () -> Void in
 			self.updateContentInsets(self.originalInsets)
