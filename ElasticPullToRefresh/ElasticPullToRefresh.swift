@@ -38,7 +38,8 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 		return pullDistance + bendDistance
 	}
 	private var touchX: CGFloat = 0.0
-	private var refreshing = false
+	private var isRefreshing = false
+	private var isAnimating = false
 	private var originalInsets = UIEdgeInsetsMake(0, 0, 0, 0)
 	private var context = "ElasticPullToRefreshContext"
 	
@@ -81,14 +82,14 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	// MARK: Refreshing
 	
 	private func startRefreshing() {
-		refreshing = true
+		isRefreshing = true
 		bounceView.indicator.setAnimating(true)
 	}
 	
 	public func didFinishRefreshing() {
 		scrollView.scrollEnabled = false
 		
-		refreshing = false
+		isRefreshing = false
 		updateContentInsets(originalInsets)
 		bounceView.indicator.setAnimating(false)
 		
@@ -99,7 +100,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	
 	func didPan(gestureRecognizer: UIPanGestureRecognizer) {
 		if gestureRecognizer.state == .Ended {
-			if refreshing {
+			if isRefreshing {
 				updateContentInsets(UIEdgeInsetsMake(originalInsets.top + pullDistance, 0, 0, 0))
 			}
 		}
@@ -112,7 +113,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	
 	public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<()>) {
 		if (context == &self.context) {
-			if refreshing == false && keyPath == "contentOffset" {
+			if isRefreshing == false && keyPath == "contentOffset" {
 				handleScroll()
 			}
 			else if keyPath == "contentInset" {
@@ -131,16 +132,18 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	}
 	
 	private func updateContentInsets(insets: UIEdgeInsets) {
+		isAnimating = true
 		scrollView.removeObserver(self, forKeyPath: "contentInset")
 		UIView.animateWithDuration(animationDuration, animations: { () -> Void in
 			self.scrollView.contentInset = insets
 		}) { (completed: Bool) -> Void in
-			self.scrollView.addObserver(self, forKeyPath: "contentInset", options: .New, context: &self.context)
+			self.isAnimating = false
 		}
+		scrollView.addObserver(self, forKeyPath: "contentInset", options: .New, context: &context)
 	}
 	
 	private func handleScroll() {
-		let y = scrollView.contentOffset.y * -1 - scrollView.contentInset.top
+		let y = (isAnimating ? 0 : (scrollView.contentOffset.y * -1)) - scrollView.contentInset.top
 		let bounds = self.bounds
 		bounceView.frame = CGRectMake(bounds.minX, bounds.origin.y + scrollView.contentInset.top + min(y - pullDistance, 0), bounds.size.width, pullDistance)
 		
