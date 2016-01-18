@@ -132,10 +132,11 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	
 	private func updateContentInsets(insets: UIEdgeInsets) {
 		scrollView.removeObserver(self, forKeyPath: "contentInset")
-		UIView.animateWithDuration(animationDuration) { () -> Void in
+		UIView.animateWithDuration(animationDuration, animations: { () -> Void in
 			self.scrollView.contentInset = insets
+		}) { (completed: Bool) -> Void in
+			self.scrollView.addObserver(self, forKeyPath: "contentInset", options: .New, context: &self.context)
 		}
-		scrollView.addObserver(self, forKeyPath: "contentInset", options: .New, context: &context)
 	}
 	
 	private func handleScroll() {
