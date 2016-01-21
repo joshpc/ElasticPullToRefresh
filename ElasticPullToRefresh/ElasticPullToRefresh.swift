@@ -138,6 +138,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 			self.scrollView.contentInset = insets
 		}) { (completed: Bool) -> Void in
 			self.isAnimating = false
+			self.handleScroll()
 		}
 		scrollView.addObserver(self, forKeyPath: "contentInset", options: .New, context: &context)
 	}
@@ -145,7 +146,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	private func handleScroll() {
 		let y = (isAnimating ? 0 : (scrollView.contentOffset.y * -1)) - scrollView.contentInset.top
 		let bounds = self.bounds
-		bounceView.frame = CGRectMake(bounds.minX, bounds.origin.y + scrollView.contentInset.top + min(y - pullDistance, 0), bounds.size.width, pullDistance)
+		bounceView.frame = CGRectMake(bounds.minX, min(bounds.origin.y + scrollView.contentInset.top + min(y - pullDistance, 0), 0), bounds.size.width, pullDistance)
 		
 		if y > 0 {
 			if y < pullDistance {
