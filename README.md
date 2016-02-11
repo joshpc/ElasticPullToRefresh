@@ -7,7 +7,7 @@ ElasticPullToRefresh is a very simple and slightly customizable pull to refresh 
 ## Usage
 
 #### Installation
-Use **Cocoapods**: `pod 'ElasticPullToRefresh'`
+Use **CocoaPods**: `pod 'ElasticPullToRefresh'`
 
 #### Code Changes
 Import the module where necessary, `import ElasticPullToRefresh`
