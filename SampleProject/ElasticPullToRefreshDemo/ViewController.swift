@@ -13,30 +13,30 @@ class ViewController: UIViewController {
 		let tableView = UITableView()
 		let wrapper = ElasticPullToRefresh(scrollView: tableView)
 		wrapper.didPullToRefresh = {
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * NSEC_PER_SEC)), dispatch_get_main_queue()) { () -> Void in
+			DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(2 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC)) { () -> Void in
 				wrapper.didFinishRefreshing()
 			}
 		}
 		view = wrapper
 	}
 	
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
 		self.navigationItem.title = "Bananas"
 		self.navigationController?.navigationBar.titleTextAttributes = [
-			NSForegroundColorAttributeName : UIColor.whiteColor(),
-			NSFontAttributeName : UIFont.systemFontOfSize(18.0, weight: UIFontWeightBold)
+			NSForegroundColorAttributeName : UIColor.white,
+			NSFontAttributeName : UIFont.systemFont(ofSize: 18.0, weight: UIFontWeightBold)
 		];
-		self.navigationController?.navigationBar.translucent = false
+		self.navigationController?.navigationBar.isTranslucent = false
 		self.navigationController?.navigationBar.shadowImage = UIImage()
-		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
-		self.navigationController?.navigationBar.barTintColor = UIColor.purpleColor()
+		self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+		self.navigationController?.navigationBar.barTintColor = UIColor.purple
 	}
 }
 
 class NavigationController: UINavigationController {
-	override func preferredStatusBarStyle() -> UIStatusBarStyle {
-		return .LightContent
+	override var preferredStatusBarStyle : UIStatusBarStyle {
+		return .lightContent
 	}
 }
