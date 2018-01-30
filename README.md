@@ -2,9 +2,13 @@
 
 ElasticPullToRefresh is a very simple and slightly customizable pull to refresh control that has a spinner.
 
-![spinner](https://dl.dropboxusercontent.com/u/1512544/Exp/pullToRefresh.gif)
+![pulltorefresh](https://user-images.githubusercontent.com/128299/35554349-b9a22128-05de-11e8-96a7-5500e23555d7.gif)
 
 ## Usage
+
+#### Details
+
+Builds using iOS 11.2+, Swift 4.
 
 #### Installation
 Use **CocoaPods**: `pod 'ElasticPullToRefresh'`
