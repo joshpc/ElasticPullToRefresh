@@ -21,6 +21,8 @@ public class IndicatorView: UIView {
 	
 	var interactiveProgress: CGFloat = 0.0 {
 		didSet {
+			guard animating == false else { return }
+			
 			circleLayer.strokeStart = 0
 			circleLayer.strokeEnd = interactiveProgress
 		}

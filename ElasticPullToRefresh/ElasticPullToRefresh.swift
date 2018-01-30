@@ -154,6 +154,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 		bounceView.frame = CGRect(x: bounds.minX, y: min(bounds.origin.y + scrollView.contentInset.top + min(y - pullDistance, 0), 0), width: bounds.size.width, height: pullDistance)
 		
 		if y > 0 {
+			indicator.isHidden = false
 			if y < pullDistance {
 				bounceView.indicator.interactiveProgress = min(1.0, y / maxDistance)
 				bounceView.bend(x: touchX, y: 0)
@@ -167,6 +168,9 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 				bounceView.indicator.interactiveProgress = min(1.0, y / maxDistance)
 				bounceView.bend(x: touchX, y: min(y - pullDistance, bendDistance))
 			}
+		}
+		else {
+			indicator.isHidden = true
 		}
 	}
 	
