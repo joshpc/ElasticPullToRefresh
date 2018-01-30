@@ -6,6 +6,10 @@ ElasticPullToRefresh is a very simple and slightly customizable pull to refresh 
 
 ## Usage
 
+#### Details
+
+Builds using iOS 11.2+, Swift 4.
+
 #### Installation
 Use **CocoaPods**: `pod 'ElasticPullToRefresh'`
 
