@@ -2,7 +2,7 @@
 
 ElasticPullToRefresh is a very simple and slightly customizable pull to refresh control that has a spinner.
 
-![Pull To Refresh](https://user-images.githubusercontent.com/128299/35554231-4d3a5924-05de-11e8-8d5a-1c7d30c4ebb6.gif)
+![pulltorefresh](https://user-images.githubusercontent.com/128299/35554349-b9a22128-05de-11e8-96a7-5500e23555d7.gif)
 
 ## Usage
 
