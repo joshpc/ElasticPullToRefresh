@@ -3,7 +3,7 @@
 //  ElasticPullToRefresh
 //
 //  Created by Joshua Tessier on 2015-12-20.
-//  Copyright © 2015 Joshua Tessier. All rights reserved.
+//  Copyright © 2015-2018 Joshua Tessier. All rights reserved.
 //
 
 import UIKit
@@ -63,10 +63,13 @@ public class IndicatorView: UIView {
 	}
 
 	public required init?(coder aDecoder: NSCoder) {
-	    fatalError("init(coder:) has not been implemented")
+	    super.init(coder: aDecoder)
+		setupViews()
 	}
 	
 	private func setupViews() {
+		translatesAutoresizingMaskIntoConstraints = false
+		
 		circleLayer.lineWidth = 2
 		circleLayer.fillColor = nil
 		circleLayer.strokeColor = UIColor.white.cgColor
@@ -79,7 +82,7 @@ public class IndicatorView: UIView {
 		super.layoutSubviews()
 		
 		let center = CGPoint(x: bounds.midX, y: bounds.midY)
-		let radius = min(bounds.width, bounds.height) / 2 - circleLayer.lineWidth/2
+		let radius = min(bounds.width, bounds.height) / 2 - circleLayer.lineWidth / 2
 		
 		let startAngle = -CGFloat.pi / 2
 		let endAngle = startAngle + (2 * CGFloat.pi)

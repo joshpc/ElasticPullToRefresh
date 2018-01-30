@@ -3,7 +3,7 @@
 //  ElasticPullToRefresh
 //
 //  Created by Joshua Tessier on 2015-12-20.
-//  Copyright © 2015 Joshua Tessier. All rights reserved.
+//  Copyright © 2015-2018 Joshua Tessier. All rights reserved.
 //
 
 import UIKit
@@ -135,7 +135,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	private func updateContentInsets(insets: UIEdgeInsets) {
 		isAnimating = true
 		scrollView.removeObserver(self, forKeyPath: "contentInset")
-		UIView.animate(withDuration: animationDuration, animations: { () -> Void in
+		UIView.animate(withDuration: animationDuration, animations: {
 			self.scrollView.contentInset = insets
 		}) { (completed: Bool) -> Void in
 			self.isAnimating = false

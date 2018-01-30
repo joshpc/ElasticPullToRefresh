@@ -3,15 +3,22 @@
 //  ElasticPullToRefresh
 //
 //  Created by Joshua Tessier on 2015-12-20.
-//  Copyright © 2015 Joshua Tessier. All rights reserved.
+//  Copyright © 2015-2018 Joshua Tessier. All rights reserved.
 //
 
 import UIKit
 
 class BounceView: UIView, CAAnimationDelegate {
 	private var bendLayer: CAShapeLayer!
+	private var indicatorConstraints = [NSLayoutConstraint]()
+	
 	let indicator = IndicatorView()
-	var indicatorSize = CGSize(width: 30.0, height: 30.0)
+	var indicatorSize = CGSize(width: 30.0, height: 30.0) {
+		didSet {
+			updateIndicatorConstraints()
+		}
+	}
+	
 	var fillColor: UIColor? {
 		didSet {
 			bendLayer.fillColor = (fillColor ?? .purple).cgColor
@@ -21,6 +28,18 @@ class BounceView: UIView, CAAnimationDelegate {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		
+		setupViews()
+		updateIndicatorConstraints()
+	}
+	
+	required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+		
+		setupViews()
+		updateIndicatorConstraints()
+	}
+	
+	private func setupViews() {
 		bendLayer = CAShapeLayer(layer: self.layer)
 		bendLayer.lineWidth = 0
 		bendLayer.path = bendPath(x: 0.0, y: 0.0)
@@ -30,13 +49,16 @@ class BounceView: UIView, CAAnimationDelegate {
 		addSubview(indicator)
 	}
 	
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-	
-	override func layoutSubviews() {
-		super.layoutSubviews()
-		indicator.frame = CGRect(x: bounds.origin.x + round((bounds.size.width - indicatorSize.width) * 0.5), y: bounds.maxY - indicatorSize.height - 15.0, width: indicatorSize.width, height: indicatorSize.height)
+	private func updateIndicatorConstraints() {
+		NSLayoutConstraint.deactivate(indicatorConstraints)
+		indicatorConstraints.removeAll()
+		
+		indicatorConstraints.append(indicator.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor))
+		indicatorConstraints.append(indicator.heightAnchor.constraint(equalToConstant: indicatorSize.height))
+		indicatorConstraints.append(indicator.widthAnchor.constraint(equalToConstant: indicatorSize.width))
+		indicatorConstraints.append(indicator.topAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -(indicatorSize.height * 1.5)))
+		
+		NSLayoutConstraint.activate(indicatorConstraints)
 	}
 	
 	func bend(x: CGFloat, y: CGFloat) {
