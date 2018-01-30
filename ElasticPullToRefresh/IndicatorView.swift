@@ -15,7 +15,7 @@ public class IndicatorView: UIView {
 	
 	public var indicatorTintColor: UIColor? {
 		didSet {
-			circleLayer.strokeColor = (tintColor ?? UIColor.whiteColor()).CGColor
+			circleLayer.strokeColor = (tintColor ?? UIColor.white).cgColor
 		}
 	}
 	
@@ -51,7 +51,7 @@ public class IndicatorView: UIView {
 	private let rotationAnimation: CAAnimation = {
 		let animation = CABasicAnimation(keyPath: "transform.rotation.z")
 		animation.fromValue = 0
-		animation.toValue = M_PI * 2
+		animation.toValue = CGFloat.pi * 2
 		animation.duration = 4
 		animation.repeatCount = MAXFLOAT
 		return animation
@@ -69,7 +69,7 @@ public class IndicatorView: UIView {
 	private func setupViews() {
 		circleLayer.lineWidth = 2
 		circleLayer.fillColor = nil
-		circleLayer.strokeColor = UIColor.whiteColor().CGColor
+		circleLayer.strokeColor = UIColor.white.cgColor
 		circleLayer.strokeStart = 0
 		circleLayer.strokeEnd = 0
 		layer.addSublayer(circleLayer)
@@ -81,15 +81,15 @@ public class IndicatorView: UIView {
 		let center = CGPoint(x: bounds.midX, y: bounds.midY)
 		let radius = min(bounds.width, bounds.height) / 2 - circleLayer.lineWidth/2
 		
-		let startAngle = CGFloat(-M_PI_2)
-		let endAngle = startAngle + CGFloat(M_PI * 2)
-		let path = UIBezierPath(arcCenter: CGPointZero, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
+		let startAngle = -CGFloat.pi / 2
+		let endAngle = startAngle + (2 * CGFloat.pi)
+		let path = UIBezierPath(arcCenter: .zero, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
 		
 		circleLayer.position = center
-		circleLayer.path = path.CGPath
+		circleLayer.path = path.cgPath
 	}
 	
-	func setAnimating(animating: Bool) {
+	func set(animating: Bool) {
 		self.interactiveProgress = 0.0
 		self.animating = animating
 		updateAnimation()
@@ -97,12 +97,12 @@ public class IndicatorView: UIView {
 	
 	private func updateAnimation() {
 		if animating {
-			circleLayer.addAnimation(strokeAnimations, forKey: "strokes")
-			circleLayer.addAnimation(rotationAnimation, forKey: "rotation")
+			circleLayer.add(strokeAnimations, forKey: "strokes")
+			circleLayer.add(rotationAnimation, forKey: "rotation")
 		}
 		else {
-			circleLayer.removeAnimationForKey("strokes")
-			circleLayer.removeAnimationForKey("rotation")
+			circleLayer.removeAnimation(forKey: "strokes")
+			circleLayer.removeAnimation(forKey: "rotation")
 		}
 	}
 }

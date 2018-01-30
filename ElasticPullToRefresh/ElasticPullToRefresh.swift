@@ -44,7 +44,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	private var context = "ElasticPullToRefreshContext"
 	
 	convenience public init(scrollView: UIScrollView) {
-		self.init(frame: CGRectZero, scrollView: scrollView)
+		self.init(frame: .zero, scrollView: scrollView)
 	}
 	
 	public init(frame: CGRect, scrollView: UIScrollView) {
@@ -52,15 +52,16 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 		super.init(frame: frame)
 		
 		backgroundColor = scrollView.backgroundColor
-		scrollView.backgroundColor = UIColor.clearColor()
+		scrollView.backgroundColor = .clear
 		
 		addSubview(scrollView)
 		addSubview(bounceView)
 		
-		scrollView.addObserver(self, forKeyPath: "contentOffset", options: .Initial, context: &context)
-		scrollView.addObserver(self, forKeyPath: "contentInset", options: .Initial, context: &context)
+		scrollView.addObserver(self, forKeyPath: "contentOffset", options: .initial, context: &context)
+		scrollView.addObserver(self, forKeyPath: "contentInset", options: .initial, context: &context)
 		
-		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: "didPan:")
+		let selector = #selector(didPan(gestureRecognizer:))
+		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: selector)
 		panGestureRecognizer.delegate = self
 		panGestureRecognizer.delaysTouchesBegan = false
 		panGestureRecognizer.delaysTouchesEnded = false
@@ -83,35 +84,35 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	
 	private func startRefreshing() {
 		isRefreshing = true
-		bounceView.indicator.setAnimating(true)
+		bounceView.indicator.set(animating: true)
 	}
 	
 	public func didFinishRefreshing() {
-		scrollView.scrollEnabled = false
+		scrollView.isScrollEnabled = false
 		
 		isRefreshing = false
-		updateContentInsets(originalInsets)
-		bounceView.indicator.setAnimating(false)
+		updateContentInsets(insets: originalInsets)
+		bounceView.indicator.set(animating: false)
 		
-		scrollView.scrollEnabled = true
+		scrollView.isScrollEnabled = true
 	}
 	
 	// MARK: Gesture Recognizers
 	
-	func didPan(gestureRecognizer: UIPanGestureRecognizer) {
-		if gestureRecognizer.state == .Ended {
+	@objc private func didPan(gestureRecognizer: UIPanGestureRecognizer) {
+		if gestureRecognizer.state == .ended {
 			if isRefreshing {
-				updateContentInsets(UIEdgeInsetsMake(originalInsets.top + pullDistance, 0, 0, 0))
+				updateContentInsets(insets: UIEdgeInsetsMake(originalInsets.top + pullDistance, 0, 0, 0))
 			}
 		}
 		else {
-			touchX = gestureRecognizer.locationInView(self).x
+			touchX = gestureRecognizer.location(in: self).x
 		}
 	}
 	
 	// MARK: Observing
 	
-	public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<()>) {
+	public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
 		if (context == &self.context) {
 			if isRefreshing == false && keyPath == "contentOffset" {
 				handleScroll()
@@ -121,7 +122,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 			}
 		}
 		else {
-			super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+			super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
 		}
 	}
 	
@@ -134,19 +135,19 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	private func updateContentInsets(insets: UIEdgeInsets) {
 		isAnimating = true
 		scrollView.removeObserver(self, forKeyPath: "contentInset")
-		UIView.animateWithDuration(animationDuration, animations: { () -> Void in
+		UIView.animate(withDuration: animationDuration, animations: { () -> Void in
 			self.scrollView.contentInset = insets
 		}) { (completed: Bool) -> Void in
 			self.isAnimating = false
 			self.handleScroll()
 		}
-		scrollView.addObserver(self, forKeyPath: "contentInset", options: .New, context: &context)
+		scrollView.addObserver(self, forKeyPath: "contentInset", options: .new, context: &context)
 	}
 	
 	private func handleScroll() {
 		let y = (isAnimating ? 0 : (scrollView.contentOffset.y * -1)) - scrollView.contentInset.top
 		let bounds = self.bounds
-		bounceView.frame = CGRectMake(bounds.minX, min(bounds.origin.y + scrollView.contentInset.top + min(y - pullDistance, 0), 0), bounds.size.width, pullDistance)
+		bounceView.frame = CGRect(x: bounds.minX, y: min(bounds.origin.y + scrollView.contentInset.top + min(y - pullDistance, 0), 0), width: bounds.size.width, height: pullDistance)
 		
 		if y > 0 {
 			if y < pullDistance {
@@ -167,7 +168,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	
 	// MARK: UIGestureRecognizerDelegate Methods
 	
-	public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+	public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 		return true
 	}
 }
