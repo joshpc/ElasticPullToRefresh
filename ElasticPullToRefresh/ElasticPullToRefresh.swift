@@ -24,6 +24,10 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 		}
 	}
 	
+	public var indicator: IndicatorView {
+		return bounceView.indicator
+	}
+	
 	public var fillColor: UIColor? {
 		set {
 			bounceView.fillColor = newValue
