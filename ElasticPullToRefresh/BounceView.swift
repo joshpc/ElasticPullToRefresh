@@ -3,43 +3,65 @@
 //  ElasticPullToRefresh
 //
 //  Created by Joshua Tessier on 2015-12-20.
-//  Copyright © 2015 Joshua Tessier. All rights reserved.
+//  Copyright © 2015-2018 Joshua Tessier. All rights reserved.
 //
 
 import UIKit
 
-class BounceView: UIView {
+class BounceView: UIView, CAAnimationDelegate {
 	private var bendLayer: CAShapeLayer!
+	private var indicatorConstraints = [NSLayoutConstraint]()
+	
 	let indicator = IndicatorView()
-	var indicatorSize: CGSize = CGSizeMake(30.0, 30.0)
+	var indicatorSize = CGSize(width: 30.0, height: 30.0) {
+		didSet {
+			updateIndicatorConstraints()
+		}
+	}
+	
 	var fillColor: UIColor? {
 		didSet {
-			bendLayer.fillColor = (fillColor ?? UIColor.purpleColor()).CGColor
+			bendLayer.fillColor = (fillColor ?? .purple).cgColor
 		}
 	}
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		
+		setupViews()
+		updateIndicatorConstraints()
+	}
+	
+	required init?(coder aDecoder: NSCoder) {
+		super.init(coder: aDecoder)
+		
+		setupViews()
+		updateIndicatorConstraints()
+	}
+	
+	private func setupViews() {
 		bendLayer = CAShapeLayer(layer: self.layer)
 		bendLayer.lineWidth = 0
 		bendLayer.path = bendPath(x: 0.0, y: 0.0)
-		bendLayer.fillColor = UIColor.purpleColor().CGColor
+		bendLayer.fillColor = UIColor.purple.cgColor
 		
 		layer.addSublayer(bendLayer)
 		addSubview(indicator)
 	}
 	
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+	private func updateIndicatorConstraints() {
+		NSLayoutConstraint.deactivate(indicatorConstraints)
+		indicatorConstraints.removeAll()
+		
+		indicatorConstraints.append(indicator.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor))
+		indicatorConstraints.append(indicator.heightAnchor.constraint(equalToConstant: indicatorSize.height))
+		indicatorConstraints.append(indicator.widthAnchor.constraint(equalToConstant: indicatorSize.width))
+		indicatorConstraints.append(indicator.topAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -(indicatorSize.height * 1.5)))
+		
+		NSLayoutConstraint.activate(indicatorConstraints)
 	}
 	
-	override func layoutSubviews() {
-		super.layoutSubviews()
-		indicator.frame = CGRectMake(bounds.origin.x + round((bounds.size.width - indicatorSize.width) * 0.5), bounds.maxY - indicatorSize.height - 15.0, indicatorSize.width, indicatorSize.height)
-	}
-	
-	func bend(x x: CGFloat, y: CGFloat) {
+	func bend(x: CGFloat, y: CGFloat) {
 		bendLayer.path = bendPath(x: x, y: y)
 	}
 	
@@ -59,27 +81,27 @@ class BounceView: UIView {
 		]
 		bounce.values = values
 		bounce.duration = duration
-		bounce.removedOnCompletion = true
+		bounce.isRemovedOnCompletion = true
 		bounce.fillMode = kCAFillModeForwards
 		bounce.delegate = self
-		bendLayer.addAnimation(bounce, forKey: "bounce")
+		bendLayer.add(bounce, forKey: "bounce")
 	}
 	
-	private func bendPath(x x: CGFloat, y: CGFloat) -> CGPathRef {
+	private func bendPath(x: CGFloat, y: CGFloat) -> CGPath {
 		let bezierPath = UIBezierPath()
 		
-		let tip = CGPointMake(bounds.minX + x, bounds.maxY + y)
+		let tip = CGPoint(x: bounds.minX + x, y: bounds.maxY + y)
 		let tipMinX = round(tip.x - bounds.width * 0.7)
 		let tipMaxX = round(tip.x + bounds.width * 0.7)
 		let minX = min(bounds.minX - 20, tipMinX)
 		let maxX = max(bounds.maxX + 20, tipMaxX)
 		
-		bezierPath.moveToPoint(CGPointMake(minX, bounds.minY))
-		bezierPath.addLineToPoint(CGPointMake(maxX, bounds.minY))
-		bezierPath.addLineToPoint(CGPointMake(maxX, bounds.maxY))
+		bezierPath.move(to: CGPoint(x: minX, y: bounds.minY))
+		bezierPath.addLine(to: CGPoint(x: maxX, y: bounds.minY))
+		bezierPath.addLine(to: CGPoint(x: maxX, y: bounds.maxY))
 		
-		bezierPath.addQuadCurveToPoint(tip, controlPoint: CGPointMake(tipMaxX, tip.y))
-		bezierPath.addQuadCurveToPoint(CGPointMake(bounds.minX, bounds.maxY), controlPoint: CGPointMake(tipMinX, tip.y))
-		return bezierPath.CGPath
+		bezierPath.addQuadCurve(to: tip, controlPoint: CGPoint(x: tipMaxX, y: tip.y))
+		bezierPath.addQuadCurve(to: CGPoint(x: bounds.minX, y: bounds.maxY), controlPoint: CGPoint(x: tipMinX, y: tip.y))
+		return bezierPath.cgPath
 	}
 }
