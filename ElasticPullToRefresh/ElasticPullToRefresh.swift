@@ -82,7 +82,7 @@ public class ElasticPullToRefresh: UIView, UIGestureRecognizerDelegate {
 	
 	// MARK: Refreshing
 	
-	private func startRefreshing() {
+	public func startRefreshing() {
 		isRefreshing = true
 		bounceView.indicator.set(animating: true)
 	}
